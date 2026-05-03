@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>منصة الاختبارات الرقمية</title>
+  <meta name="description" content="منصة الاختبارات الرقمية - نظام اختبارات تفاعلية للطلاب">
+  <meta name="keywords" content="اختبارات, اختبارات رقمية, منصة اختبارات, اختبارات للطلاب">
+  <meta name="author" content="منصة الاختبارات الرقمية">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#1a237e">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <!-- صفحة تسجيل الدخول للطلاب -->
+    <div id="studentLoginPage">
+      <div class="login-overlay">
+        <div class="exam-icon">&#9998;</div>
+        <h1 class="site-title">منصة الاختبارات الرقمية</h1>
+        <p class="site-subtitle">نظام اختبارات تفاعلية للطلاب والمعلمين</p>
+
+        <div id="studentLoginForm">
+          <div class="form-header">
+            <span class="form-icon">&#128100;</span>
+            <h2>تسجيل دخول الطالب</h2>
+          </div>
+
+          <div class="input-group">
+            <label for="student_login_name">الاسم الثلاثي</label>
+            <input type="text" id="student_login_name" required placeholder="أحمد محمد علي" autocomplete="name">
+            <div class="error-msg" id="studentNameError"></div>
+          </div>
+
+          <div class="input-group">
+            <label for="student_login_number">رقم البطاقة</label>
+            <input type="text" id="student_login_number" required placeholder="أدخل رقمك الخاص" autocomplete="username">
+            <div class="error-msg" id="studentNumberError"></div>
+          </div>
+
+          <button type="button" id="studentLoginBtn" onclick="handleStudentLogin()">تسجيل الدخول</button>
+
+          <div class="admin-access">
+            <button type="button" class="admin-link" onclick="showAdminLogin()">دخول الأدمن</button>
+          </div>
+        </div>
+
+        <div class="prayer">
+          <p>بسم الله توكلت على الله، اللهم لا سهل إلا ما جعلته سهلاً</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- صفحة تسجيل الدخول للأدمن -->
+    <div id="adminLoginPage" style="display: none;">
+      <div class="login-overlay">
+        <div class="exam-icon">&#128272;</div>
+        <h1 class="site-title">منصة الاختبارات الرقمية</h1>
+
+        <div id="adminLoginForm">
+          <div class="form-header">
+            <span class="form-icon">&#128274;</span>
+            <h2>دخول الأدمن</h2>
+          </div>
+
+          <div class="input-group">
+            <label for="admin_name">اسم الأدمن</label>
+            <input type="text" id="admin_name" required placeholder="أدخل اسم الأدمن">
+          </div>
+
+          <div class="input-group">
+            <label for="admin_number">رقم الأدمن</label>
+            <input type="password" id="admin_number" required placeholder="أدخل الرقم السري">
+          </div>
+
+          <button type="button" id="adminLoginBtn" onclick="handleAdminLogin()">دخول</button>
+          <button type="button" class="back-btn" onclick="showStudentLogin()">العودة</button>
+
+          <div class="error-msg" id="adminError"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- صفحة التسجيل للطالب -->
+    <div id="registrationPage" style="display: none;">
+      <div class="page-header">
+        <div class="exam-badge">&#9998; اختبار جديد</div>
+        <h2>بيانات الطالب</h2>
+      </div>
+
+      <div id="studentInfoForm">
+        <div class="info-display">
+          <div class="info-row">
+            <span class="info-label">الاسم الثلاثي:</span>
+            <input type="text" id="full_name" required readonly>
+          </div>
+          <div class="info-row">
+            <span class="info-label">رقم البطاقة:</span>
+            <input type="text" id="username" required readonly>
+          </div>
+        </div>
+        <button type="button" id="startBtn" onclick="startQuiz()">ابدأ الاختبار</button>
+      </div>
+    </div>
+
+    <!-- صفحة الإدمن -->
+    <div id="adminPage" style="display: none;">
+      <div class="page-header admin-header">
+        <div class="admin-badge">&#128272; لوحة التحكم</div>
+        <h2>لوحة تحكم الأدمن</h2>
+      </div>
+
+      <div class="admin-nav">
+        <button type="button" onclick="showAdminSection('questions')">&#128221; إدارة الأسئلة</button>
+        <button type="button" onclick="showAdminSection('results')">&#128202; نتائج الطلاب</button>
+        <button type="button" onclick="showAdminSection('settings')">&#9881; إعدادات</button>
+        <button type="button" onclick="logout()">&#8592; تسجيل الخروج</button>
+      </div>
+
+      <div id="adminQuestionsSection" class="admin-section">
+        <h3>إدارة الأسئلة</h3>
+        <div class="stats-bar">
+          <div class="stat-item">
+            <span class="stat-icon">&#128203;</span>
+            <span>عدد الأسئلة: <strong id="questionCount">0</strong></span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">&#128200;</span>
+            <span>متوسط النجاح: <strong id="avgScore">0%</strong></span>
+          </div>
+        </div>
+        <button type="button" onclick="addNewQuestion()" class="add-btn">+ إضافة سؤال جديد</button>
+        <div id="adminQuestionsList"></div>
+      </div>
+
+      <div id="adminResultsSection" class="admin-section" style="display: none;">
+        <h3>نتائج الطلاب</h3>
+        <div class="stats-bar">
+          <div class="stat-item">
+            <span class="stat-icon">&#128101;</span>
+            <span>عدد النتائج: <strong id="resultsCount">0</strong></span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">&#128200;</span>
+            <span>متوسط النجاح: <strong id="avgScore2">0%</strong></span>
+          </div>
+        </div>
+        <div id="adminResultsList"></div>
+      </div>
+
+      <div id="adminSettingsSection" class="admin-section" style="display: none;">
+        <h3>إعدادات المنصة</h3>
+        <div class="settings-form">
+          <div class="input-group">
+            <label>وقت الاختبار (دقيقة لكل سؤال):</label>
+            <input type="number" id="timePerQuestion" value="1" min="0.5" max="5" step="0.5">
+          </div>
+          <div class="input-group">
+            <label>اسم المنصة:</label>
+            <input type="text" id="platformName" value="منصة الاختبارات الرقمية">
+          </div>
+          <button type="button" onclick="saveSettings()">حفظ الإعدادات</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- صفحة الاختبار -->
+    <div id="quizPage" style="display: none;">
+      <div class="quiz-header">
+        <div class="exam-badge-large">&#9998; الاختبار</div>
+        <div id="timer">10:00</div>
+      </div>
+
+      <div id="quizForm">
+        <div class="question-container" id="questionContainer"></div>
+        <div class="navigation">
+          <button type="button" id="prevBtn" onclick="changeQuestion(-1)">&#8594; السابق</button>
+          <button type="button" id="nextBtn" onclick="changeQuestion(1)">التالي &#8592;</button>
+        </div>
+        <div class="question-status">
+          <h3>حالة الأسئلة</h3>
+          <div id="questionTable"></div>
+        </div>
+        <button type="button" class="submit-btn" id="submitBtn" onclick="submitExam()" disabled>إرسال الإجابات</button>
+      </div>
+    </div>
+
+    <!-- صفحة النتيجة -->
+    <div id="resultPage" style="display: none;">
+      <div class="page-header">
+        <div class="result-badge">&#127942; النتيجة</div>
+        <h2>نتيجة الاختبار</h2>
+      </div>
+
+      <div class="result-card">
+        <div class="result-info-grid">
+          <div class="result-info-item">
+            <span class="info-icon">&#128100;</span>
+            <div>
+              <span class="info-label">الاسم:</span>
+              <span id="resultName"></span>
+            </div>
+          </div>
+          <div class="result-info-item">
+            <span class="info-icon">&#128203;</span>
+            <div>
+              <span class="info-label">رقم البطاقة:</span>
+              <span id="resultNumber"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="score-circle">
+          <span id="resultScore"></span>
+          <small>من <span id="resultTotal"></span></small>
+        </div>
+
+        <p id="resultMessage"></p>
+        <div id="resultDetails"></div>
+      </div>
+
+      <button type="button" onclick="location.reload()">&#8634; العودة للرئيسية</button>
+    </div>
+
+    <footer>
+      <p>منصة الاختبارات الرقمية 2026</p>
+    </footer>
+  </div>
+</body>
+</html>
